@@ -1,0 +1,132 @@
+<!DOCTYPE html> <!-- Defines the document type and version of HTML -->
+<html lang="en"> <!-- Starts the HTML document with English as the language -->
+<head>
+    <meta charset="UTF-8"> <!-- Specifies the character encoding for the document -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures proper rendering on different devices -->
+    <title>Travel Preferences Page</title> <!-- Sets the title of the webpage displayed in the browser tab -->
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antic+Slab&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+   
+
+    <style>
+        /* Styles the body of the webpage */
+        body {
+            max-width: 400px; /* Limits the width of the content */
+            height: 600px;
+            margin: 20px auto; /* Centers the content and adds spacing */
+            padding: 20px; /* Adds padding around the content */
+            margin-top: 250px;
+        }
+        
+        /* Styles form elements */
+        label, input, select, button {
+            display: block; /* Ensures each element appears on a new line */
+            width: 100%; /* Makes elements take full width */
+            margin: 10px 0; 
+            padding: 8px; 
+            background-color: rgb(218, 245, 222);
+            border-radius: 20px;
+            border: 1px rgb(163, 227, 174) solid;
+        }
+
+        button{
+            background: #A3E3AE; 
+            color: black; 
+            font-weight: bold;
+            border: none; 
+            cursor: pointer; 
+        }
+        
+        button:hover { 
+            background: #81e592; 
+        }
+
+        /* Styles error messages */
+        .error {
+            color: red; /* Sets the text color to red */
+            font-size: 14px; /* Defines a smaller font size */
+        }
+
+        /* Styles the saved preferences section */
+        .saved-preferences {
+            margin-top: 20px; /* Adds space above the section */
+            padding: 10px; /* Adds padding inside the box */
+            border: 1px solid #ccc; /* Adds a border around the section */
+            border-radius: 5px; /* Rounds the corners */
+            background-color: #f9f9f9; /* Sets a light gray background */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="images/bg_logo.png" class="logo" alt="Logo">
+        <div class="nav-links">
+            <a href="index.html">Homepage</a>
+            <a href="./customizable_Trip_Planning.html">Trip Planning</a>
+            <a href="./budget_Estimator.html">Budget Estimator</a>
+            <a href="./multi-Destination_Planning.html">Multi-Destination</a>
+            <a href="./travel_preference_form.html">Preference</a>
+            <!-- <a href="./plan.html">Plan</a> -->
+            <a href="./login.html">Login</a>
+        </div>
+    </div>
+    
+    <h2>Travel Preferences</h2> <!-- Displays a heading for the page -->
+
+    <form id="preferencesForm"> <!-- Creates a form with an ID for JavaScript reference -->
+        <label for="destination">Destination</label> <!-- Label for the destination input field -->
+        <input type="text" id="destination" name="destination" placeholder="Enter destination"> <!-- Input field for entering a destination -->
+       
+        <label for="activityType">Activity Type</label> <!-- Label for the activity selection -->
+        <select id="activityType" name="activityType"> <!-- Dropdown menu for selecting activity type -->
+            <option value="">Select an activity</option> <!-- Default placeholder option -->
+            <option value="beach">Beach</option> <!-- Option for beach activity -->
+            <option value="hiking">Hiking</option> <!-- Option for hiking activity -->
+            <option value="sightseeing">Sightseeing</option> <!-- Option for sightseeing activity -->
+        </select>
+       
+        <label for="travelDate">Travel Date</label> <!-- Label for the travel date input -->
+        <input type="date" id="travelDate" name="travelDate"> <!-- Input field for selecting a date -->
+       
+        <p class="error" id="errorMessage"></p> <!-- Displays error messages if fields are empty -->
+       
+        <button type="button" onclick="savePreferences()">Save Preferences</button> <!-- Button to trigger saving preferences -->
+    </form>
+   
+    <div id="savedPreferences" class="saved-preferences" style="display: none;"> <!-- Section to display saved preferences, initially hidden -->
+        <h3>Saved Preferences</h3> <!-- Heading for saved preferences -->
+        <p><strong>Destination:</strong> <span id="savedDestination"></span></p> <!-- Displays saved destination -->
+        <p><strong>Activity Type:</strong> <span id="savedActivityType"></span></p> <!-- Displays saved activity type -->
+        <p><strong>Travel Date:</strong> <span id="savedTravelDate"></span></p> <!-- Displays saved travel date -->
+    </div>
+   
+    <script>
+        function savePreferences() {
+            // Get the values from input fields
+            const destination = document.getElementById("destination").value;
+            const activityType = document.getElementById("activityType").value;
+            const travelDate = document.getElementById("travelDate").value;
+            const errorMessage = document.getElementById("errorMessage");
+           
+            // Check if any field is empty
+            if (!destination || !activityType || !travelDate) {
+                errorMessage.textContent = "All fields must be filled out."; // Display error message
+                return; // Stop execution if validation fails
+            }
+            errorMessage.textContent = ""; // Clear error message if inputs are valid
+           
+            // Update saved preferences section with user inputs
+            document.getElementById("savedDestination").textContent = destination;
+            document.getElementById("savedActivityType").textContent = activityType;
+            document.getElementById("savedTravelDate").textContent = travelDate;
+            
+            // Display the saved preferences section
+            document.getElementById("savedPreferences").style.display = "block";
+        }
+    </script>
+</body>
+</html>

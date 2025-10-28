@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-image: url(./images/bg_plan.png);
+    background-repeat: no-repeat;
+    background-size: 1600px 720px;
+}
+label, input, select {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #218838;
+}
+.error {
+    color: red;
+    font-weight: bold;
+}
+.confirmation {
+    color: green;
+    font-weight: bold;
+}

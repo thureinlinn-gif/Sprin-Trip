@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Estimator</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antic+Slab&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            margin: 20px; 
+        }
+        .container { 
+            margin: auto; 
+        }
+
+        #destination{
+            width: 520px;
+        }
+
+        #tripDays{
+            width: 500px;
+        }
+
+        h2 { 
+            text-align: center; 
+            text-shadow: 3px 3px 4px rgb(172, 229, 181);
+        }
+        label { 
+            font-weight: bold; 
+            display: block; 
+            margin-top: 10px; 
+            text-shadow: 3px 3px 4px rgb(172, 229, 181);
+        }
+        select, input, button { 
+            width: 100%; 
+            padding: 8px; 
+            margin-top: 5px; 
+            background-color: rgb(218, 245, 222);
+            border-radius: 20px;
+            border: 1px rgb(163, 227, 174) solid;
+        }
+        button { 
+            background: #28a745; 
+            color: black; 
+            border: none; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            background-color: rgb(218, 245, 222);
+            border-radius: 20px;
+            border: 1px rgb(163, 227, 174) solid;
+        }
+        button:hover { 
+            background: #218838; 
+        }
+        .result-box { 
+            background: #d4edda; 
+            padding: 10px; 
+            border-radius: 5px; 
+            margin-top: 10px; 
+            color: #155724; 
+        }
+        .hidden { 
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="images/bg_logo.png" class="logo" alt="Logo">
+        <div class="nav-links">
+            <a href="index.html">Homepage</a>
+            <a href="./customizable_Trip_Planning.html">Trip Planning</a>
+            <a href="./budget_Estimator.html">Budget Estimator</a>
+            <a href="./multi-Destination_Planning.html">Multi-Destination</a>
+            <a href="./travel_preference_form.html">Preference</a>
+            <!-- <a href="./plan.html">Plan</a> -->
+            <a href="./login.html">Login</a>
+        </div>
+    </div>
+
+<div class="container">
+    <h2>Budget Estimator</h2>
+
+    <!-- Trip Inputs -->
+    <label for="destination">Destination:</label>
+    <select id="destination">
+        <option value="Paris">Paris</option>
+        <option value="Tokyo">Tokyo</option>
+        <option value="New York">New York</option>
+        <option value="Rome">Rome</option>
+        <option value="Bangkok">Bangkok</option>
+    </select>
+
+    <label for="tripDays">Trip Duration (Days):</label>
+    <input type="number" id="tripDays" min="1" value="5">
+
+    <!-- Transport Options -->
+    <label for="transport">Choose Transportation:</label>
+    <select id="transport">
+        <option value="flight">Flight</option>
+        <option value="train">Train</option>
+        <option value="bus">Bus</option>
+    </select>
+
+    <!-- Accommodation Options -->
+    <label for="accommodation">Choose Accommodation:</label>
+    <select id="accommodation">
+        <option value="hotel">Hotel</option>
+        <option value="hostel">Hostel</option>
+        <option value="rental">Rental</option>
+    </select>
+
+    <!-- Currency Selection -->
+    <label for="currency">Select Currency:</label>
+    <select id="currency">
+        <option value="USD">USD </option>
+        <option value="EUR">EUR </option>
+        <option value="JPY">JPY </option>
+        <option value="AUD">AUD</option>
+        <option value="BGN">BGN</option>
+        <option value="BRL">BRL</option>
+        <option value="CAD">CAD</option>
+        <option value="CHF">CHF</option>
+        <option value="CNY">CNY</option>
+        <option value="CZK">CZK</option>
+        <option value="DKK">DKK</option>
+        <option value="GBP">GBP</option>
+        <option value="HKD">HKD</option>
+        <option value="HRK">HRK</option>
+        <option value="HUF">HUF</option>
+        <option value="IDR">IDR</option>
+        <option value="ILS">ILS</option>
+        <option value="INR">INR</option>
+        <option value="ISK">ISK</option>
+        <option value="KRW">KRW</option>
+        <option value="MXN">MXN</option>
+        <option value="MYR">MYR</option>
+        <option value="NOK">NOK</option>
+        <option value="NZD">NZD</option>
+        <option value="PHP">PHP</option>
+        <option value="PLN">PLN</option>
+        <option value="RON">RON</option>
+        <option value="RUB">RUB</option>
+        <option value="SEK">SEK</option>
+        <option value="SGD">SGD</option>
+        <option value="THB">THB</option>
+        <option value="TRY">TRY</option>
+        <option value="ZAR">ZAR</option>
+    </select>
+
+    <button onclick="calculateCost()">Estimate Cost</button>
+
+    <!-- Cost Breakdown -->
+    <div id="costBreakdown" class="hidden result-box">
+        <h3>Cost Breakdown</h3>
+        <p id="totalCost"></p>
+        <p id="convertedCost"></p>
+    </div>
+</div>
+
+<script>
+    // Base costs for destinations (per day)
+    // Stores estimated travel costs for different destinations
+    const costData = {
+        "Paris": { flight: 600, train: 200, bus: 100, hotel: 150, hostel: 50, rental: 100, food: 50, transport: 20, activities: 70 },
+        "Tokyo": { flight: 800, train: 250, bus: 150, hotel: 100, hostel: 40, rental: 80, food: 40, transport: 15, activities: 60 },
+        "New York": { flight: 500, train: 300, bus: 120, hotel: 200, hostel: 60, rental: 120, food: 60, transport: 25, activities: 80 },
+        "Rome": { flight: 550, train: 220, bus: 130, hotel: 120, hostel: 45, rental: 90, food: 45, transport: 18, activities: 75 },
+        "Bangkok": { flight: 700, train: 180, bus: 90, hotel: 80, hostel: 30, rental: 70, food: 30, transport: 10, activities: 50 }
+    };
+
+    // Function to calculate the estimated cost of a trip
+    function calculateCost() {
+
+         // Get the selected destination from the dropdown
+        let destination = document.getElementById('destination').value;
+
+         // Get the number of days for the trip
+        let tripDays = parseInt(document.getElementById('tripDays').value);
+
+         // Get the chosen transportation method (flight, train, or bus)
+        let transportType = document.getElementById('transport').value;
+
+        // Get the selected type of accommodation (hotel or hostel)
+        let accommodationType = document.getElementById('accommodation').value;
+
+          // Get the currency in which the user wants to see the cost
+        let currency = document.getElementById('currency').value;
+
+         // Retrieve cost details for the selected destination
+        let cost = costData[destination];
+
+        // Calculate total trip cost based on transport, accommodation, food, local transport, and activities
+        let totalCost = cost[transportType] + (cost[accommodationType] * tripDays) + (cost.food * tripDays) + (cost.transport * tripDays) + (cost.activities * tripDays);
+        
+        // Display cost in USD first
+        document.getElementById('totalCost').innerText = `Total Cost (USD): $${totalCost.toFixed(2)}`;
+
+        // Show the cost breakdown section
+        document.getElementById('costBreakdown').classList.remove('hidden');
+
+        // Convert cost to selected currency
+        convertCurrency(totalCost, "USD", currency);
+    }
+
+    // Function to convert the cost into another currency using an exchange rate API
+    async function convertCurrency(amount, fromCurrency, toCurrency) {
+
+        // API key to access currency exchange rates
+        const apiKey = 'fca_live_oS3mRRPdECyMveJjvP5RfOi6LCHtm7HsSVfCFUru';
+
+        // URL for fetching exchange rates, using USD as the base currency
+        const url = `https://api.freecurrencyapi.com/v1/latest?apikey=${apiKey}&base_currency=${fromCurrency}`;
+
+        try {
+            console.log(`Fetching: ${url}`); // Print the API URL for debugging
+
+            // Request exchange rate data from the API
+            let response = await fetch(url);
+
+            // If the request fails, show an error message
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Convert the API response to JSON format
+            let data = await response.json();
+            console.log("API Response:", data); // Print the API response for debugging
+
+            // Check if the API response contains data for the selected currency
+            if (data.data && data.data[toCurrency]) {
+
+                 // Get the exchange rate for the selected currency
+                let conversionRate = data.data[toCurrency];
+
+                 // Convert the total cost using the exchange rate
+                let convertedAmount = amount * conversionRate;
+
+                // Display the converted cost in the chosen currency
+                document.getElementById('convertedCost').innerText =  `Converted Cost: ${convertedAmount.toFixed(2)} ${toCurrency}`;
+            } else {
+
+                // Show an error message if currency data is missing
+                document.getElementById('convertedCost').innerText = `Error: Currency not supported or missing data.`;
+            }
+        } catch (error) {
+
+            // Handle errors (e.g., internet issues or API failures)
+            console.error("Error fetching exchange rate:", error);
+            document.getElementById('convertedCost').innerText = `Error fetching exchange rate!`;
+        }
+}
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Authentication</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antic+Slab&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            text-align: center; 
+            padding: 50px; 
+            margin-top: -150px;
+        }
+        .container { 
+            max-width: 400px; 
+            margin: auto; 
+            padding: 20px; 
+        }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+        }
+
+        label, input, select, button {
+            display: block; /* Ensures each element appears on a new line */
+            width: 100%; /* Makes elements take full width */
+            margin: 10px 0; 
+            padding: 8px; 
+            background-color: rgb(218, 245, 222);
+            border-radius: 20px;
+            border: 1px rgb(163, 227, 174) solid;
+        }
+
+        button{
+            background: #A3E3AE; 
+            color: black; 
+            font-weight: bold;
+            border: none; 
+            cursor: pointer; 
+            padding: 10px;
+            width: 100%;
+        }
+        
+        button:hover { 
+            background: #81e592; 
+        }
+        
+        .hidden { 
+            display: none; 
+        }
+        .register{
+            color: #2c7e5e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="images/bg_logo.png" class="logo" alt="Logo">
+        <div class="nav-links">
+            <a href="index.html">Homepage</a>
+            <a href="./customizable_Trip_Planning.html">Trip Planning</a>
+            <a href="./budget_Estimator.html">Budget Estimator</a>
+            <a href="./multi-Destination_Planning.html">Multi-Destination</a>
+            <a href="./travel_preference_form.html">Preference</a>
+            <a href="./login.html">Login</a>
+        </div>
+    </div>
+
+    <div class="container" id="register">
+        <h2>Register</h2>
+        <!-- Input field for email -->
+        <input type="email" id="regEmail" placeholder="Email" required>
+        <!-- Input field for password -->
+        <input type="password" id="regPassword" placeholder="Password" required>
+        <!-- Register button triggers the registerUser function -->
+        <button onclick="registerUser()">Register</button>
+        <!-- Link to switch to the login form -->
+        <p>Already have an account? <a href="#" onclick="showLogin()" class="register">Login</a></p>
+    </div>
+
+    <!-- Login Form (Hidden by Default) -->
+    <div class="container hidden" id="login">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+         <!-- Login button triggers the loginUser function -->
+        <button onclick="loginUser()">Login</button>
+        <!-- Link to switch to the registration form -->
+        <p>Don't have an account? <a href="#" onclick="showRegister()" class="register">Register</a></p>
+    </div>
+
+     <!-- Dashboard (Hidden by Default) -->
+    <div class="container hidden" id="dashboard">
+        <h2>Welcome, <span id="userEmail"></span>!</h2>
+        <!-- Logout button triggers the logoutUser function -->
+        <button onclick="logoutUser()">Logout</button>
+    </div>
+
+    <script>
+        // Function to show the login form and hide the registration form
+        function showLogin() {
+            // Hide registration form
+            document.getElementById('register').classList.add('hidden');
+            // Show login form
+            document.getElementById('login').classList.remove('hidden');
+        }
+
+        // Function to show the registration form and hide the login form
+        function showRegister() {
+            // Hide login form
+            document.getElementById('login').classList.add('hidden');
+            // Show registration form
+            document.getElementById('register').classList.remove('hidden');
+        }
+
+        // Function to register a new user
+        function registerUser() {
+            // Get email input
+            let email = document.getElementById('regEmail').value;
+            // Get password input
+            let password = document.getElementById('regPassword').value;
+            // Check if both fields are filled
+            if(email && password) {
+                // Store credentials in local storage
+                localStorage.setItem(email, password);
+                // Show success message
+                alert('Registration Successful! Please login.');
+                // Switch to the login form
+                showLogin();
+            } else {
+                // Alert if fields are empty
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // Function to log in a user
+        function loginUser() {
+            let email = document.getElementById('loginEmail').value;
+            let password = document.getElementById('loginPassword').value;
+            // Retrieve password from local storage
+            let storedPassword = localStorage.getItem(email);
+            // Check if stored password matches input
+            if(storedPassword === password) {
+                // Store logged-in user in session storage
+                sessionStorage.setItem('loggedInUser', email);
+                // Display user's email
+                document.getElementById('userEmail').innerText = email;
+                // Hide login form
+                document.getElementById('login').classList.add('hidden');
+                // Show dashboard
+                document.getElementById('dashboard').classList.remove('hidden');
+            } else {
+                // Show error message for incorrect login
+                alert('Invalid credentials. Please try again.');
+            }
+        }
+
+        // Function to log out the user
+        function logoutUser() {
+            // Remove user session
+            sessionStorage.removeItem('loggedInUser');
+            // Hide dashboard
+            document.getElementById('dashboard').classList.add('hidden');
+            // Show login form again
+            showLogin();
+        }
+
+        // Function to check if a user is already logged in when the page loads
+        window.onload = function() {
+            // Get stored user session
+            let user = sessionStorage.getItem('loggedInUser');
+            // If a user is found in session storage
+            if(user) {
+                document.getElementById('userEmail').innerText = user;
+                document.getElementById('dashboard').classList.remove('hidden');
+            } else {
+                // If no user is logged in, show the login form
+                showLogin();
+            }
+        };
+    </script>
+</body>
+</html>

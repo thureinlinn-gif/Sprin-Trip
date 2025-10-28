@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Details Form</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./plan.css">
+</head>
+<body>
+    <h2>Enter Trip Details</h2>
+    <p id="error" class="error"></p>
+    <p id="confirmation" class="confirmation"></p>
+    
+    <form id="tripForm">
+        <label for="destination">Destination:</label>
+        <select id="destination" name="destination" required>
+            <option value="">Select a destination</option>
+            <option value="New York">New York</option>
+            <option value="Los Angeles">Los Angeles</option>
+            <option value="Paris">Paris</option>
+            <option value="Tokyo">Tokyo</option>
+            <option value="London">London</option>
+        </select>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required>
+
+        <label for="budget">Budget ($):</label>
+        <input type="number" id="budget" name="budget" min="1" required>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('tripForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let destination = document.getElementById('destination').value;
+            let startDate = document.getElementById('start_date').value;
+            let endDate = document.getElementById('end_date').value;
+            let budget = document.getElementById('budget').value;
+            let errorElement = document.getElementById('error');
+            let confirmationElement = document.getElementById('confirmation');
+            
+            errorElement.textContent = '';
+            confirmationElement.textContent = '';
+            
+            if (!destination || !startDate || !endDate || !budget) {
+                errorElement.textContent = 'All fields are required.';
+                return;
+            }
+            
+            let startDateObj = new Date(startDate);
+            let endDateObj = new Date(endDate);
+            budget = parseFloat(budget);
+            
+            if (startDateObj >= endDateObj) {
+                errorElement.textContent = 'End date must be after the start date.';
+            } else if (budget <= 0) {
+                errorElement.textContent = 'Budget must be a positive number.';
+            } else {
+                confirmationElement.textContent = `Trip planned to ${destination} from ${startDate} to ${endDate} with a budget of $${budget.toFixed(2)}.`;
+            }
+        });
+    </script>
+</body>
+</html>

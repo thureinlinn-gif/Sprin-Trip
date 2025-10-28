@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Trips & Favorites Page</title>
+    <style>
+        /* Styling for the entire page */
+        body {
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        /* Styling for the main container */
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        /* Styles for trip and favorite destination items */
+        .trip, .favorite {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #e0f7fa;
+            cursor: pointer;
+        }
+        /* Changes background color when hovering over an item */
+        .trip:hover, .favorite:hover {
+            background: #b2ebf2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Saved Trips</h2>
+        <div id="trips"></div>
+        <h2>Favorite Destinations</h2>
+        <div id="favorites"></div>
+    </div>
+   
+    <script>
+         // Array containing saved trips with location and date
+        const trips = [
+            { location: "Paris, France", date: "June 2023" },
+            { location: "Tokyo, Japan", date: "September 2022" },
+            { location: "New York, USA", date: "December 2021" }
+        ];
+
+        // Array containing favorite destinations
+        const favorites = [
+            "Bali, Indonesia",
+            "Rome, Italy",
+            "Santorini, Greece"
+        ];
+
+         // Function to display trips on the page
+        function displayTrips() {
+            // Selects the 'trips' container div
+            const tripsContainer = document.getElementById("trips");
+            // Loops through each trip in the array
+            trips.forEach(trip => {
+                // Creates a new <div> for each trip
+                const tripDiv = document.createElement("div");
+                // Assigns the CSS class for styling
+                tripDiv.className = "trip";
+                 // Adds trip details in bold
+                tripDiv.innerHTML = `<strong>${trip.location}</strong> - ${trip.date}`;
+                // Appends the trip div to the container
+                tripsContainer.appendChild(tripDiv);
+            });
+        }
+
+         // Function to display favorite destinations on the page
+        function displayFavorites() {
+            // Selects the 'favorites' container div
+            const favoritesContainer = document.getElementById("favorites");
+            // Loops through each favorite destination
+            favorites.forEach(destination => {
+                // Creates a new <div> for each destination
+                const favDiv = document.createElement("div");
+                // Assigns the CSS class for styling
+                favDiv.className = "favorite";
+                // Sets the text content to the destination name
+                favDiv.innerText = destination;
+                 // Adds a click event to show an alert
+                favDiv.onclick = () => alert(`Starting trip planning for ${destination}...`);
+                // Appends the destination div to the container
+                favoritesContainer.appendChild(favDiv);
+            });
+        }
+
+         // Calls the function to display trips when the page loads
+        displayTrips();
+        // Calls the function to display favorite destinations when the page loads
+        displayFavorites();
+    </script>
+</body>
+</html>

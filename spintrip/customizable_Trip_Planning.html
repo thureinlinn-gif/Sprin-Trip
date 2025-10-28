@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizable Trip Planning</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antic+Slab&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 20px; 
+            margin-top: 100px;
+        }
+        .container {  
+            margin: auto; 
+        }
+
+        #tripForm{
+            width: 500px;
+        }
+
+        #start_date, #end_date, #budget{
+            width: 485px;
+        }
+
+        h2, h3 { 
+            text-align: center; 
+            text-shadow: 3px 3px 4px rgb(172, 229, 181);
+        
+        }
+
+        label { 
+            font-weight: bold; 
+            text-shadow: 3px 3px 4px rgb(172, 229, 181);
+        }
+        input, select, button { 
+            display: block; 
+            width: 100%; 
+            margin: 10px 0; 
+            padding: 8px; 
+            background-color: rgb(218, 245, 222);
+            border-radius: 20px;
+            border: 1px rgb(163, 227, 174) solid;
+        }
+        button { 
+            background: #A3E3AE; 
+            color: black; 
+            font-weight: bold;
+            border: none; 
+            cursor: pointer; 
+        }
+        button:hover { 
+            background: #81e592; 
+        }
+        .hidden { 
+            display: none; 
+        }
+        .result-box { 
+            padding: 10px; 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+            border-radius: 5px; 
+            margin-top: 10px; 
+        }
+        ul { 
+            padding-left: 20px;        
+        }
+        #activitiesList{
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="images/bg_logo.png" class="logo" alt="Logo">
+        <div class="nav-links">
+            <a href="index.html">Homepage</a>
+            <a href="./customizable_Trip_Planning.html">Trip Planning</a>
+            <a href="./budget_Estimator.html">Budget Estimator</a>
+            <a href="./multi-Destination_Planning.html">Multi-Destination</a>
+            <a href="./travel_preference_form.html">Preference</a>
+            <a href="./login.html">Login</a>
+        </div>
+    </div>
+
+<div class="container">
+    <h2>Trip Planner</h2>
+    
+    <!-- Trip Planning Form -->
+    <form id="tripForm">
+        <label for="destination">Destination:</label>
+        <select id="destination" required>
+            <option value="">Select a destination</option>
+            <option value="Paris">Paris</option>
+            <option value="Tokyo">Tokyo</option>
+            <option value="New York">New York</option>
+            <option value="Rome">Rome</option>
+            <option value="Bangkok">Bangkok</option>
+        </select>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" required>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" required>
+
+        <label for="budget">Budget ($):</label>
+        <input type="number" id="budget" min="100" required>
+
+        <label for="tripType">Trip Type:</label>
+        <select id="tripType">
+            <option value="custom">Custom</option>
+            <option value="random">Randomized</option>
+        </select>
+
+        <label for="preference">Travel Preference:</label>
+        <select id="preference">
+            <option value="adventure">Adventure</option>
+            <option value="relaxation">Relaxation</option>
+            <option value="culture">Culture</option>
+        </select>
+
+        <button type="submit">Plan My Trip</button>
+    </form>
+
+    <!-- Message box that appears after trip confirmation -->
+    <div id="confirmationBox" class="hidden result-box">
+        <h3>Trip Confirmed!</h3>
+        <p id="confirmationText"></p>
+    </div>
+
+    <!-- Estimated budget will be displayed here -->
+    <h3>Estimated Trip Cost</h3>
+    <div id="budgetEstimation" class="hidden result-box"></div>
+
+    <!-- List of suggested activities based on travel preference -->
+    <h3>Recommended Activities</h3>
+    <div id="activitiesList"></div>
+</div>
+
+<script>
+    // Listen for form submission
+    document.getElementById('tripForm').addEventListener('submit', function(event) {
+
+        // Prevent the page from reloading
+        event.preventDefault();
+
+        // Get user inputs
+        let destination = document.getElementById('destination').value;
+        let startDate = document.getElementById('start_date').value;
+        let endDate = document.getElementById('end_date').value;
+        let budget = document.getElementById('budget').value;
+        let tripType = document.getElementById('tripType').value;
+        let preference = document.getElementById('preference').value;
+
+        // // Check if all required fields are filled
+        if (!destination || !startDate || !endDate || !budget) {
+            alert("Please fill out all required fields.");
+            return;
+        }
+
+        // Display confirmation message with trip details
+        let confirmationText = `Trip planned to ${destination} from ${startDate} to ${endDate} with a budget of $${budget}.`;
+        document.getElementById('confirmationText').innerText = confirmationText;
+        document.getElementById('confirmationBox').classList.remove('hidden');
+
+        // Estimate Budget
+        estimateBudget(destination, budget);
+
+        // Generate activities based on user preference
+        generateActivities(preference);
+
+        // Notify user if they selected a randomized itinerary
+        if (tripType === "random") {
+            alert("A randomized itinerary has been generated based on your preferences.");
+        }
+    });
+
+     // Function to estimate total trip cost based on destination
+    function estimateBudget(destination, budget) {
+        // Predetmined Base costs per destination
+        const baseCosts = {
+            "Paris": { flight: 600, hotel: 120, food: 50, transport: 20, activities: 80 },
+            "Tokyo": { flight: 800, hotel: 100, food: 40, transport: 15, activities: 70 },
+            "New York": { flight: 500, hotel: 150, food: 60, transport: 25, activities: 100 },
+            "Rome": { flight: 550, hotel: 110, food: 45, transport: 18, activities: 75 },
+            "Bangkok": { flight: 700, hotel: 80, food: 30, transport: 10, activities: 50 }
+        };
+
+        // Get cost data for the selected destination
+        let cost = baseCosts[destination];
+
+         // Calculate estimated total cost for 5 days
+        let totalCost = cost.flight + (cost.hotel * 5) + (cost.food * 5) + (cost.transport * 5) + (cost.activities * 5);
+        
+        // Display estimated budget breakdown
+        document.getElementById('budgetEstimation').innerHTML = `
+            <p>Estimated Trip Cost: <strong>$${totalCost.toFixed(2)}</strong></p>
+            <ul>
+                <li>Flight: $${cost.flight}</li>
+                <li>Accommodation (5 nights): $${cost.hotel * 5}</li>
+                <li>Food (5 days): $${cost.food * 5}</li>
+                <li>Local Transport (5 days): $${cost.transport * 5}</li>
+                <li>Activities: $${cost.activities * 5}</li>
+            </ul>
+        `;
+        document.getElementById('budgetEstimation').classList.remove('hidden');
+    }
+
+    // Function to generate suggested activities based on travel preference
+    function generateActivities(preference) {
+        let activities = {
+            adventure: ["Hiking", "Scuba Diving", "Rock Climbing", "Skydiving", "Safari"],
+            relaxation: ["Spa Day", "Beach Picnic", "Yoga Retreat", "Hot Springs", "Sunset Cruise"],
+            culture: ["Museum Visit", "Historical Tour", "Food Tasting", "Art Exhibition", "Traditional Dance Show"]
+        };
+
+        let activitiesList = document.getElementById('activitiesList');
+        activitiesList.innerHTML = ""; // Clear previous recommendations
+
+        let selectedActivities = activities[preference];
+
+        // Add new activity recommendations
+        selectedActivities.forEach(activity => {
+            let li = document.createElement('li');
+            li.textContent = activity;
+            activitiesList.appendChild(li);
+        });
+    }
+</script>
+
+</body>
+</html>
